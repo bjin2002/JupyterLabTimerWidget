@@ -19,30 +19,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd, labStatus: ILabStatus, statusBar: IStatusBar) => {
     console.log('JupyterLab extension jupyterlab_widget is activated!');
     let startTime = Date.now();
-    const statusWidget = new Widget();
     const timeWidget = new Widget();
 
-    let statusWidgetID = statusWidget
-
-
     labStatus.busySignal.connect(() => {
-      statusWidget.node.textContent = labStatus.isBusy ? 'Ben Busy' : 'Ben Idle';
-      if (statusWidget.node.textContent === "Ben Busy") {
+      if (labStatus.isBusy) {
         startTime = Date.now();
         console.log("Cell Ran");
-        // setInterval()
       }
-      if (statusWidget.node.textContent === "Ben Idle") {
+      if (!labStatus.isBusy) {
         console.log("stopped")
         timeWidget.node.textContent = (Date.now() - startTime).toString().concat(" ms");
       }
-    });
-
-    statusBar
-
-    statusBar.registerStatusItem('lab-status', {
-      align: 'left',
-      item: statusWidget
     });
 
     statusBar.registerStatusItem('time-status', {
